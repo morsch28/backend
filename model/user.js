@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import joi from "joi";
+import Joi from "joi";
 import _ from "lodash";
 
 const userSchema = new mongoose.Schema({
@@ -38,12 +38,11 @@ const userSchema = new mongoose.Schema({
   image: {
     url: {
       type: String,
-      minlength: 14,
+      default: "",
     },
     alt: {
       type: String,
-      minlength: 2,
-      maxlength: 256,
+      default: "",
     },
   },
   address: {
@@ -82,56 +81,73 @@ const userSchema = new mongoose.Schema({
   },
   age: {
     type: Number,
-    minlength: 2,
-    maxlength: 120,
+    min: 2,
+    max: 120,
     required: true,
   },
   interests: {
-    type: String,
+    type: [String],
     enum: ["workout", "healthy nutrition", "travel"],
     required: true,
+  },
+  bio: {
+    type: String,
+    default: "",
+  },
+  likesBioUser: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "User",
+    default: [],
+  },
+  isOnline: {
+    type: Boolean,
+    default: false,
+  },
+  isBusiness: {
+    type: Boolean,
+    required: true,
+  },
+  isAdmin: {
+    type: Boolean,
+    default: false,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
   },
 });
 
 const User = mongoose.model("User", userSchema, "users");
 
 const validation = {
-  name: joi
-    .object({
-      first: joi.string().min(2).max(256).required(),
-      middle: joi.string().min(2).max(256),
-      last: joi.string().min(2).max(256).required(),
-    })
+  name: Joi.object({
+    first: Joi.string().min(2).max(256).required(),
+    middle: Joi.string().min(2).max(256),
+    last: Joi.string().min(2).max(256).required(),
+  }).required(),
+  email: Joi.string().min(5).max(1024).email({ tlds: true }).required(),
+  password: Joi.string().min(8).max(1025).required(),
+  image: Joi.object({
+    url: Joi.string().min(14).optional().allow(""),
+    alt: Joi.string().min(2).max(256).optional().allow(""),
+  }).required(),
+  address: Joi.object({
+    state: Joi.string().min(2).max(256).allow(""),
+    country: Joi.string().min(2).max(256).required(),
+    city: Joi.string().min(2).max(256).required(),
+    street: Joi.string().min(2).max(256).required(),
+    houseNumber: Joi.number().min(1).required(),
+    zip: Joi.number().min(2).allow(""),
+  }).required(),
+  age: Joi.number().min(2).max(120).required(),
+  interests: Joi.array()
+    .items(Joi.string().valid("workout", "healthy nutrition", "travel"))
     .required(),
-  email: joi.string().min(5).max(1024).email({ tlds: true }).required(),
-  password: joi.string().min(8).max(1025).required(),
-  image: joi
-    .object({
-      url: joi.string().min(14),
-      alt: joi.string().min(2).max(256),
-    })
-    .required(),
-  address: joi
-    .object({
-      state: joi.string().min(2).max(256),
-      country: joi.string().min(2).max(256).required(),
-      city: joi.string().min(2).max(256).required(),
-      street: joi.string().min(2).max(256).required(),
-      houseNumber: joi.number().min(1).required(),
-      zip: joi.number().min(2),
-    })
-    .required(),
-  age: joi.number().min(2).max(120).required(),
-  interests: joi.string().valid("workout", "healthy nutrition", "travel"),
+  bio: Joi.string().min(2).max(1024).optional().default(""),
+  isBusiness: Joi.boolean().required(),
 };
 
-const userValidation = joi.object(validation);
-const loginValidation = _.pick(validation, ["email", "password"]);
+const userValidation = Joi.object(validation);
+const loginValidation = Joi.object(_.pick(validation, ["email", "password"]));
 
-const exportUser = {
-  User,
-  userValidation,
-  loginValidation,
-};
-
-export default exportUser;
+export { User, userValidation, loginValidation };
