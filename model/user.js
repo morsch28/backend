@@ -10,11 +10,6 @@ const userSchema = new mongoose.Schema({
       maxlength: 256,
       required: true,
     },
-    middle: {
-      type: String,
-      minlength: 2,
-      maxlength: 256,
-    },
     last: {
       type: String,
       minlength: 2,

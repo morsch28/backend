@@ -3,10 +3,10 @@ import { User, loginValidation } from "../model/user.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-const router = express.Router();
+const router = express();
 
 //login
-router.post("/login", async (req, res) => {
+router.post("/sign-in", async (req, res) => {
   try {
     const { error } = loginValidation.validate(req.body);
     if (error) {
@@ -38,6 +38,25 @@ router.post("/login", async (req, res) => {
     res.send(token);
   } catch (error) {
     res.status(500).send(error.message);
+  }
+});
+
+//create-user
+router.post("/sign-up", async (req, res) => {
+  try {
+    const { error } = userValidation.validate(req.body);
+    if (error) {
+      return res.status(400).send(error.message);
+    }
+
+    const user = await new User({
+      ...req.body,
+      password: await bcrypt.hash(req.body.password, 14),
+    }).save();
+
+    res.send(user);
+  } catch (err) {
+    res.status(500).send(err.message);
   }
 });
 
