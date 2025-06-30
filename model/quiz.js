@@ -1,22 +1,25 @@
-import { required } from "joi";
 import mongoose from "mongoose";
 
 const quizSchema = new mongoose.Schema({
   category: {
     type: String,
     enum: ["sport", "travel", "nutrition"],
-    required,
+    required: true,
   },
   question: {
     type: String,
-    required,
+    required: true,
   },
   answers: {
     type: [String],
-    required,
+    required: true,
   },
   correctAnswer: {
     type: Number,
-    required,
+    required: true,
   },
 });
+
+const Quiz = mongoose.model("Quiz", quizSchema, "quiz");
+
+export default Quiz;

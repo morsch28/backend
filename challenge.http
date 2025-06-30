@@ -1,0 +1,5 @@
+@local=http://localhost:3000/challenges
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODYyODBmZDc5ZjNjYjdmNjM2NzhmOWUiLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNzUxMjg2Mzc3fQ.fuYvnwHt5m_rqVL4OmqKTkcGoVGXK1cE2Zl7LEg8icA
+
+GET {{local}}
+x-auth-token: {{token}}

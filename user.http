@@ -1,69 +1,52 @@
 @local=http://localhost:3000/users
-@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODNiMjc3ZjdhMGY2NTBmOTZlZDE0MzYiLCJpc0J1c2luZXNzIjp0cnVlLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNzQ4NzA3MjI3fQ.2zGWD3iBS-6hC3x9FYIWr4acDQu8Yu_plvp0kVklRrM
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODYyODBmZDc5ZjNjYjdmNjM2NzhmOWUiLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNzUxMjg2Mzc3fQ.fuYvnwHt5m_rqVL4OmqKTkcGoVGXK1cE2Zl7LEg8icA
 
 POST {{local}}
 Content-Type: application/json
 
 {
     "name": {
-        "first": "lady",
+        "first":"mor",
         "last":"schneider"
     },
-    "email":"morLady@mor.com",
-    "password":"Lady123456!",
-    "image":{},
-    "address":{
-        "country":"israel",
-        "city":"tel-aviv",
-        "street":"levitan",
-        "houseNumber": 4
-    },
-    "age":35,
-    "interests":["workout"],
-    "isBusiness": true
+    "email":"mor@mor.com",
+    "password": "Mor1234567!",
+    "image":{
+
+    }
 }
 
 ###
-POST {{local}}/login
+POST {{local}}/sign-in
 Content-Type: application/json
 
 {
     "email":"mor@mor.com",
-    "password":"Smors123456!"
+    "password": "Mor1234567!"
 }
 
 ###
 GET {{local}}
 
 
+
 ###
-GET {{local}}/683b277f7a0f650f96ed1436
+GET {{local}}/686280fd79f3cb7f63678f9e
 x-auth-token: {{token}}
 
 ###
-PUT {{local}}/683b277f7a0f650f96ed1436
+PUT {{local}}/686280fd79f3cb7f63678f9e
 Content-Type: application/json
 x-auth-token: {{token}}
 
 {
-    "name": {
-        "first": "Kofiko",
+     "name": {
+        "first":"Kofiko",
         "last":"schneider"
     },
     "email":"mor@mor.com",
-    "password":"Smors123456!",
-    "image":{},
-    "address":{
-        "country":"israel",
-        "city":"tel-aviv",
-        "street":"levitan",
-        "houseNumber": 4
-    },
-    "age":35,
-    "interests":["workout"],
-    "isBusiness": true
-}
+    "password": "Mor1234567!",
+    "image":{
 
-###
-DELETE {{local}}/683b277f7a0f650f96ed1436
-x-auth-token: {{token}}
+    }
+}

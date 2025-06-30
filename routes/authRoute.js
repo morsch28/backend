@@ -1,9 +1,10 @@
 import express from "express";
-import { User, loginValidation } from "../model/user.js";
+import { User, loginValidation, userValidation } from "../model/user.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { authMdw } from "../middleWare/authMdw.js";
 
-const router = express();
+const router = express.Router();
 
 //login
 router.post("/sign-in", async (req, res) => {
@@ -42,7 +43,7 @@ router.post("/sign-in", async (req, res) => {
 });
 
 //create-user
-router.post("/sign-up", async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const { error } = userValidation.validate(req.body);
     if (error) {
@@ -57,6 +58,58 @@ router.post("/sign-up", async (req, res) => {
     res.send(user);
   } catch (err) {
     res.status(500).send(err.message);
+  }
+});
+
+//get all users
+router.get("/", async (req, res) => {
+  try {
+    const allUser = await User.find();
+    if (!allUser) {
+      return res.status(404).send("Not found users");
+    }
+    res.send(allUser);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
+
+// get user by id
+router.get("/:id", authMdw, async (req, res) => {
+  try {
+    if (!req.user.isAdmin && req.user._id != req.params.id) {
+      return res.status(401).send("Access denied");
+    }
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(404).send("Not found user");
+    }
+    res.status(200).send(user);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+router.put("/:id", authMdw, async (req, res) => {
+  try {
+    if (!req.user.isAdmin && req.user._id !== req.params.id) {
+      return res.status(401).send("Access denied");
+    }
+
+    const { error, value } = userValidation.validate(req.body);
+    if (error) {
+      return res.status(400).send(error.details[0].message);
+    }
+    const userToUpdate = await User.findByIdAndUpdate(req.params.id, value, {
+      new: true,
+    });
+    console.log(userToUpdate);
+    if (!userToUpdate) {
+      return res.status(404).send("Not found");
+    }
+    res.send(userToUpdate);
+  } catch (error) {
+    res.status(500).send(error.message);
   }
 });
 
