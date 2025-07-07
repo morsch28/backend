@@ -1,9 +1,10 @@
 import mongoose from "mongoose";
+import { categories } from "../helpers/challengesEnum.js";
 
 const quizSchema = new mongoose.Schema({
   category: {
     type: String,
-    enum: ["sport", "travel", "nutrition"],
+    enum: Object.values(categories),
     required: true,
   },
   question: {

@@ -1,18 +1,16 @@
 import dotenv from "dotenv";
 dotenv.config();
 import express from "express";
+import routers from "./routes/routers.js";
 import mongoose from "mongoose";
-import authRoute from "./routes/authRoute.js";
-import quizRoute from "./routes/quizRoute.js";
-import challengesRoute from "./routes/challengesRoute.js";
 import initialChallenges from "./helpers/InitialDataChallenges.js";
+import cors from "cors";
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 
-app.use("/users", authRoute);
-app.use("/challenges", challengesRoute);
-app.use("/quiz", quizRoute);
+app.use(routers);
 
 const PORT = 3000;
 mongoose

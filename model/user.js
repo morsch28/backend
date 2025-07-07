@@ -20,14 +20,14 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     minlength: 5,
-    maxlength: 1024,
+    maxlength: 256,
     required: true,
     unique: true,
   },
   password: {
     type: String,
     minlength: 8,
-    maxlength: 1024,
+    maxlength: 72,
     required: true,
   },
   image: {
@@ -53,8 +53,13 @@ const validation = {
     first: Joi.string().min(2).max(256).required(),
     last: Joi.string().min(2).max(256).required(),
   }).required(),
-  email: Joi.string().min(5).max(1024).email({ tlds: true }).required(),
-  password: Joi.string().min(8).max(1025).required(),
+  email: Joi.string()
+    .min(5)
+    .max(256)
+    .email({ tlds: true })
+    .regex(/^\S+@\S+\.\S+$/)
+    .required(),
+  password: Joi.string().min(8).max(50).required(),
   image: Joi.object({
     url: Joi.string().min(14).optional().allow(""),
     alt: Joi.string().min(2).max(256).optional().allow(""),

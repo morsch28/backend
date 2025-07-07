@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import Joi from "joi";
+import { status } from "../helpers/challengesEnum.js";
 
 const userChallengeSchema = new mongoose.Schema({
   userId: {
@@ -12,7 +13,7 @@ const userChallengeSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ["pending", "in-progress", "done"],
+    enum: Object.values(status),
   },
   feedback: {
     text: String,

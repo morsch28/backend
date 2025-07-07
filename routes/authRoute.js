@@ -36,7 +36,7 @@ router.post("/sign-in", async (req, res) => {
       process.env.JWT_SECRET
     );
 
-    res.send(token);
+    res.status(200).send(token);
   } catch (error) {
     res.status(500).send(error.message);
   }
@@ -55,7 +55,7 @@ router.post("/", async (req, res) => {
       password: await bcrypt.hash(req.body.password, 14),
     }).save();
 
-    res.send(user);
+    res.status(201).send(user);
   } catch (err) {
     res.status(500).send(err.message);
   }
@@ -111,6 +111,24 @@ router.put("/:id", authMdw, async (req, res) => {
   } catch (error) {
     res.status(500).send(error.message);
   }
+});
+
+router.delete("/:id", authMdw, async (req, res) => {
+  try {
+    if (!req.user.isAdmin) {
+      return res.status(401).send("Access denied");
+    }
+    const userToDelete = await User.findByIdAndDelete(req.params.id);
+    if (!userToDelete) {
+      return res.status(404).send("Not Found");
+    }
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+router.post("/sign-out", authMdw, (req, res) => {
+  res.send("User signed out successfully");
 });
 
 export default router;

@@ -1,14 +1,15 @@
 import mongoose from "mongoose";
+import { difficulty, categories } from "../helpers/challengesEnum.js";
 import Joi from "joi";
 
 const challengeSchema = new mongoose.Schema({
   category: {
     type: String,
-    enum: ["fitness", "nutrition", "mental"],
+    enum: Object.values(categories), // gets all the value from categories object to array
   },
   difficulty: {
     type: String,
-    enum: ["easy", "medium", "hard"],
+    enum: Object.values(difficulty),
   },
   title: {
     type: String,
